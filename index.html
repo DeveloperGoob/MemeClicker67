@@ -186,23 +186,50 @@
       border: 1px solid rgba(255, 221, 51, 0.4);
     }
 
-    .log-panel {
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 10px;
       font-size: 0.8rem;
-      height: 80px;
-      overflow-y: auto;
-      background: rgba(0, 0, 0, 0.25);
-      border-radius: 6px;
-      padding: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      user-select: none;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, background 0.1s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+      box-shadow: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ffdd33, #ff8800) !important;
+      color: #1a0b00 !important;
+      box-shadow: 0 0 10px rgba(255, 221, 51, 0.6) !important;
+      border: none !important;
+    }
+
+    .btn-primary.disabled,
+    .btn-primary:disabled {
+      background: #444444 !important;
+      color: #cccccc !important;
+      box-shadow: none !important;
+      cursor: not-allowed !important;
+      border: none !important;
+      opacity: 0.6 !important;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
       border: 1px solid var(--border);
     }
 
-    .log-line {
-      color: var(--muted);
-      margin-bottom: 2px;
-    }
-
-    .log-line strong {
-      color: var(--accent);
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.03);
     }
 
     .section-title {
@@ -221,13 +248,6 @@
       gap: 6px;
       max-height: 260px;
       overflow-y: auto;
-    }
-
-    @media (max-width: 800px) {
-      .upgrades-list,
-      .achievements-list {
-        max-height: 180px;
-      }
     }
 
     .card {
@@ -270,48 +290,6 @@
       border: 1px solid var(--border);
       background: rgba(255, 221, 51, 0.09);
       color: var(--accent);
-    }
-
-    .btn {
-      border-radius: 999px;
-      border: none;
-      padding: 6px 10px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      white-space: nowrap;
-      user-select: none;
-      transition: transform 0.07s ease, box-shadow 0.07s ease, background 0.1s ease;
-    }
-
-    .btn:active {
-      transform: scale(0.95);
-      box-shadow: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #ffdd33, #ff8800);
-      color: #1a0b00;
-      box-shadow: 0 0 10px rgba(255, 221, 51, 0.6);
-    }
-
-    .btn-primary.disabled {
-      background: #444444;
-      color: #cccccc;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-    }
-
-    .btn-ghost:hover {
-      background: rgba(255, 255, 255, 0.03);
     }
 
     .achievements-list .card {
@@ -364,6 +342,17 @@
       flex-wrap: wrap;
     }
 
+    .stats-ui {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
     .tap-hint {
       text-align: center;
       font-size: 0.75rem;
@@ -395,7 +384,7 @@
 </head>
 <body>
   <div class="game-wrapper">
-    <!-- LEFT: Main clicker + stats -->
+    <!-- LEFT -->
     <div class="left-panel panel">
       <div class="header">
         <h1 class="title">67 CLICKER</h1>
@@ -404,7 +393,7 @@
 
       <div class="stats-bar">
         <div class="stat-pill">
-          <span class="stat-label">Current 67s:</span>
+          <span class="stat-label">Current:</span>
           <span id="stat-current" class="stat-value">0</span>
         </div>
         <div class="stat-pill">
@@ -416,17 +405,13 @@
           <span id="stat-per-second" class="stat-value">0</span>
         </div>
         <div class="stat-pill">
-          <span class="stat-label">Total 67s:</span>
-          <span id="stat-total" class="stat-value">0</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-label">Prestige level:</span>
+          <span class="stat-label">Prestige:</span>
           <span id="stat-prestige" class="stat-value">0</span>
         </div>
       </div>
 
       <div class="big-number">
-        You own <span id="big-number">0</span> <strong>67</strong>s
+        You own <span id="big-number">0</span>
       </div>
 
       <div class="click-area">
@@ -438,18 +423,30 @@
 
       <div class="tap-hint">Tap / click the 67 ball to farm the meme.</div>
 
-      <div class="log-panel" id="log-panel"></div>
+      <!-- Stats UI (replaces console/log) -->
+      <div class="stats-ui">
+        <div>Total clicks: <span id="stat-total-clicks">0</span></div>
+        <div>Total earned: <span id="stat-total-earned">0</span></div>
+        <div>Highest held: <span id="stat-highest">0</span></div>
+        <div>Upgrades bought: <span id="stat-upgrades">0</span></div>
+        <div>Achievements unlocked: <span id="stat-achieve">0</span></div>
+        <div>Prestige level: <span id="stat-prestige-level">0</span></div>
+        <div>Aura points: <span id="stat-aura">0</span></div>
+        <div>Aura multiplier: <span id="stat-aura-mult">x1.00</span></div>
+        <div>Click power: <span id="stat-click-power">0</span></div>
+        <div>Auto power: <span id="stat-auto-power">0</span></div>
+      </div>
 
       <div class="footer-buttons">
         <button id="btn-save" class="btn btn-ghost">Save</button>
         <button id="btn-hard-reset" class="btn btn-ghost">Hard Reset</button>
         <span style="font-size:0.7rem;color:var(--muted);flex:1;text-align:right;">
-          Data auto-saves every few seconds to this device.
+          Auto-saves every few seconds on this device.
         </span>
       </div>
     </div>
 
-    <!-- RIGHT: Upgrades / Achievements / Prestige -->
+    <!-- RIGHT -->
     <div class="right-panel">
       <div class="panel">
         <h2 class="section-title">Upgrades</h2>
@@ -464,7 +461,7 @@
       <div class="panel prestige-panel">
         <h2 class="section-title">Prestige</h2>
         <div class="prestige-info">
-          Reset everything for permanent <strong>67 Aura</strong> that multiplies all 67 gain forever.
+          Reset progress for permanent <strong>67 Aura</strong> that multiplies all gain forever.
         </div>
         <div class="prestige-row">
           <div class="prestige-pill">
@@ -480,22 +477,20 @@
           </button>
         </div>
         <div class="prestige-info" id="prestige-requirement">
-          Need at least 10,000 total 67s to prestige.
+          Need at least 10,000 total 67 to prestige.
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    /**********************
-     * GAME STATE & CONFIG
-     **********************/
-    const SAVE_KEY = "sixtySevenClickerSave_v1";
+    const SAVE_KEY = "sixtySevenClickerSave_v2";
 
     const gameState = {
       currency: 0,
       totalCurrency: 0,
       totalClicks: 0,
+      highest: 0,
       perClickBase: 1,
       perSecondBase: 0,
       upgrades: {},
@@ -506,10 +501,11 @@
     };
 
     const upgradesConfig = [
+      // Basic click upgrades
       {
         id: "click_plus_1",
         name: "Finger of 67",
-        desc: "+1 per click. The meme intensifies.",
+        desc: "+1 per click.",
         baseCost: 50,
         costScale: 1.35,
         type: "click",
@@ -533,6 +529,8 @@
         type: "click",
         value: 25
       },
+
+      // Basic auto upgrades
       {
         id: "auto_1",
         name: "Background 67 Loop",
@@ -545,7 +543,7 @@
       {
         id: "auto_5",
         name: "Infinite 67 GIF Farm",
-        desc: "Generates 5 67s per second.",
+        desc: "Generates 5 67 per second.",
         baseCost: 900,
         costScale: 1.32,
         type: "auto",
@@ -554,11 +552,89 @@
       {
         id: "auto_25",
         name: "67 Dedicated Server",
-        desc: "Generates 25 67s per second.",
+        desc: "Generates 25 67 per second.",
         baseCost: 8000,
         costScale: 1.35,
         type: "auto",
         value: 25
+      },
+
+      // More click upgrades
+      {
+        id: "click_plus_100",
+        name: "Quantum 67 Tapper",
+        desc: "+100 per click.",
+        baseCost: 15000,
+        costScale: 1.48,
+        type: "click",
+        value: 100
+      },
+      {
+        id: "click_plus_500",
+        name: "Divine 67 Finger",
+        desc: "+500 per click.",
+        baseCost: 75000,
+        costScale: 1.5,
+        type: "click",
+        value: 500
+      },
+      {
+        id: "click_plus_2500",
+        name: "67 Reality Splitter",
+        desc: "+2500 per click.",
+        baseCost: 350000,
+        costScale: 1.55,
+        type: "click",
+        value: 2500
+      },
+
+      // More auto upgrades
+      {
+        id: "auto_50",
+        name: "67 Mining Rig",
+        desc: "Generates 50 67 per second.",
+        baseCost: 20000,
+        costScale: 1.35,
+        type: "auto",
+        value: 50
+      },
+      {
+        id: "auto_250",
+        name: "67 AI Generator",
+        desc: "Generates 250 67 per second.",
+        baseCost: 120000,
+        costScale: 1.38,
+        type: "auto",
+        value: 250
+      },
+      {
+        id: "auto_1000",
+        name: "67 Dimensional Farm",
+        desc: "Generates 1000 67 per second.",
+        baseCost: 650000,
+        costScale: 1.42,
+        type: "auto",
+        value: 1000
+      },
+
+      // Hybrid upgrades
+      {
+        id: "hybrid_1",
+        name: "67 Dual-Core Engine",
+        desc: "+500 per click & +500/sec.",
+        baseCost: 5000000,
+        costScale: 1.45,
+        type: "hybrid",
+        value: 500
+      },
+      {
+        id: "hybrid_2",
+        name: "67 Fusion Matrix",
+        desc: "+5000 per click & +5000/sec.",
+        baseCost: 25000000,
+        costScale: 1.5,
+        type: "hybrid",
+        value: 5000
       }
     ];
 
@@ -568,42 +644,35 @@
         name: "First 67",
         desc: "Click the 67 once.",
         check: (s) => s.totalClicks >= 1,
-        rewardText: "+5% all 67 gain (flavor only)."
+        rewardText: "The journey begins."
       },
       {
         id: "hundred_clicks",
         name: "67 Spam",
         desc: "Click 67 one hundred times.",
         check: (s) => s.totalClicks >= 100,
-        rewardText: "Proof you really want 67."
+        rewardText: "Your finger remembers this."
       },
       {
         id: "thousand_total",
         name: "67 Collector",
-        desc: "Reach 1,000 total 67s.",
+        desc: "Reach 1,000 total 67.",
         check: (s) => s.totalCurrency >= 1000,
-        rewardText: "The meme sees you."
+        rewardText: "You're in the loop."
       },
       {
         id: "tenk_total",
         name: "67 Hoarder",
-        desc: "Reach 10,000 total 67s.",
+        desc: "Reach 10,000 total 67.",
         check: (s) => s.totalCurrency >= 10000,
-        rewardText: "You’re ready to ascend."
+        rewardText: "You see the pattern."
       },
       {
         id: "first_prestige",
         name: "Ascended 67",
         desc: "Prestige at least once.",
         check: (s) => s.prestigeLevel >= 1,
-        rewardText: "67 Aura unlocked."
-      },
-      {
-        id: "deep_prestige",
-        name: "67 Overlord",
-        desc: "Prestige 5 times.",
-        check: (s) => s.prestigeLevel >= 5,
-        rewardText: "The number obeys you."
+        rewardText: "You touched the higher meme."
       }
     ];
 
@@ -613,27 +682,12 @@
       pointsPerLog10: 1.5
     };
 
-    /**********************
-     * UTILITIES
-     **********************/
     function formatNumber(n) {
       if (n < 1000) return n.toFixed(0);
       if (n < 1e6) return (n / 1e3).toFixed(1).replace(/\.0$/, "") + "K";
       if (n < 1e9) return (n / 1e6).toFixed(2).replace(/\.0+$/, "") + "M";
       if (n < 1e12) return (n / 1e9).toFixed(2).replace(/\.0+$/, "") + "B";
       return n.toExponential(2);
-    }
-
-    function addLog(msg) {
-      const panel = document.getElementById("log-panel");
-      const line = document.createElement("div");
-      line.className = "log-line";
-      line.innerHTML = msg;
-      panel.appendChild(line);
-      while (panel.children.length > 40) {
-        panel.removeChild(panel.firstChild);
-      }
-      panel.scrollTop = panel.scrollHeight;
     }
 
     function spawnPop(x, y, text) {
@@ -648,59 +702,59 @@
       }, 600);
     }
 
+    function getPrestigeMultiplier() {
+      return 1 + gameState.prestigePoints * 0.15;
+    }
+
     function getTotalClickPower() {
       let base = gameState.perClickBase;
       let bonus = 0;
       for (const id in gameState.upgrades) {
+        const count = gameState.upgrades[id] || 0;
         const u = upgradesConfig.find((x) => x.id === id);
-        if (!u || u.type !== "click") continue;
-        bonus += u.value * gameState.upgrades[id];
+        if (!u) continue;
+        if (u.type === "click" || u.type === "hybrid") {
+          bonus += u.value * count;
+        }
       }
-      const auraMult = getPrestigeMultiplier();
-      return (base + bonus) * auraMult;
+      return (base + bonus) * getPrestigeMultiplier();
     }
 
     function getTotalAutoPower() {
       let base = gameState.perSecondBase;
       let bonus = 0;
       for (const id in gameState.upgrades) {
+        const count = gameState.upgrades[id] || 0;
         const u = upgradesConfig.find((x) => x.id === id);
-        if (!u || u.type !== "auto") continue;
-        bonus += u.value * gameState.upgrades[id];
+        if (!u) continue;
+        if (u.type === "auto" || u.type === "hybrid") {
+          bonus += u.value * count;
+        }
       }
-      const auraMult = getPrestigeMultiplier();
-      return (base + bonus) * auraMult;
+      return (base + bonus) * getPrestigeMultiplier();
     }
 
-    function getPrestigeMultiplier() {
-      return 1 + gameState.prestigePoints * 0.15;
+    function getUpgradeCost(u, countOwned) {
+      return Math.floor(u.baseCost * Math.pow(u.costScale, countOwned));
     }
 
     function getPrestigeRequirement() {
-      // requirement scales with prestige level
       return prestigeConfig.baseRequirement * Math.pow(prestigeConfig.scaling, gameState.prestigeLevel);
     }
 
     function calculatePrestigeGain() {
       const req = getPrestigeRequirement();
       if (gameState.totalCurrency < req) return 0;
-      // Use logarithm-based scaling for points
       const ratio = gameState.totalCurrency / req;
       const gain = Math.floor(Math.log10(ratio + 1) * prestigeConfig.pointsPerLog10);
       return gain > 0 ? gain : 0;
     }
 
-    /**********************
-     * SAVE / LOAD
-     **********************/
     function saveGame() {
       try {
-        const saveObj = JSON.parse(JSON.stringify(gameState));
-        localStorage.setItem(SAVE_KEY, JSON.stringify(saveObj));
-        addLog("<strong>Saved:</strong> 67 data stored on this device.");
+        localStorage.setItem(SAVE_KEY, JSON.stringify(gameState));
       } catch (e) {
         console.error("Save failed", e);
-        addLog("<strong>Save failed:</strong> Unable to write to storage.");
       }
     }
 
@@ -711,10 +765,8 @@
         const data = JSON.parse(raw);
         Object.assign(gameState, data);
         gameState.lastTick = Date.now();
-        addLog("<strong>Loaded:</strong> 67 data restored from this device.");
       } catch (e) {
         console.error("Load failed", e);
-        addLog("<strong>Load failed:</strong> Corrupted or unreadable save.");
       }
     }
 
@@ -724,17 +776,12 @@
       location.reload();
     }
 
-    /**********************
-     * UI RENDERING
-     **********************/
     function renderUpgrades() {
       const container = document.getElementById("upgrades");
       container.innerHTML = "";
-
       upgradesConfig.forEach((u) => {
         const count = gameState.upgrades[u.id] || 0;
         const cost = getUpgradeCost(u, count);
-
         const card = document.createElement("div");
         card.className = "card";
 
@@ -754,7 +801,7 @@
         meta.innerHTML =
           "Cost: <span style='color:var(--accent);font-weight:600;'>" +
           formatNumber(cost) +
-          "</span> 67 • Owned: <span style='color:var(--good);font-weight:600;'>" +
+          "</span> • Owned: <span style='color:var(--good);font-weight:600;'>" +
           count +
           "</span>";
 
@@ -770,7 +817,9 @@
 
         const badge = document.createElement("div");
         badge.className = "card-badge";
-        badge.textContent = u.type === "click" ? "+ " + u.value + " / click" : "+ " + u.value + " / sec";
+        if (u.type === "click") badge.textContent = "+ " + u.value + " / click";
+        else if (u.type === "auto") badge.textContent = "+ " + u.value + " / sec";
+        else badge.textContent = "+ " + u.value + " / click & / sec";
 
         const btn = document.createElement("button");
         btn.className = "btn btn-primary";
@@ -794,7 +843,6 @@
     function renderAchievements() {
       const container = document.getElementById("achievements");
       container.innerHTML = "";
-
       achievementsConfig.forEach((a) => {
         const unlocked = !!gameState.achievementsUnlocked[a.id];
         const card = document.createElement("div");
@@ -809,11 +857,11 @@
 
         const desc = document.createElement("div");
         desc.className = "card-desc";
-        desc.textContent = unlocked ? a.desc : "Unlock this 67 achievement to reveal it.";
+        desc.textContent = unlocked ? a.desc : "Unlock to reveal this 67 achievement.";
 
         const meta = document.createElement("div");
         meta.className = "card-meta";
-        meta.innerHTML = unlocked ? a.rewardText : "Progress: Hidden";
+        meta.textContent = unlocked ? a.rewardText : "Locked";
 
         main.appendChild(title);
         main.appendChild(desc);
@@ -830,38 +878,30 @@
         side.appendChild(badge);
         card.appendChild(main);
         card.appendChild(side);
+
         container.appendChild(card);
       });
     }
 
     function renderStats() {
-      const curr = document.getElementById("stat-current");
-      const total = document.getElementById("stat-total");
-      const perClick = document.getElementById("stat-per-click");
-      const perSecond = document.getElementById("stat-per-second");
-      const prestige = document.getElementById("stat-prestige");
-      const big = document.getElementById("big-number");
-      const clickDisplay = document.getElementById("click-amount-display");
+      document.getElementById("stat-current").textContent = formatNumber(gameState.currency);
+      document.getElementById("stat-total").textContent = formatNumber(gameState.totalCurrency);
+      document.getElementById("stat-per-click").textContent = formatNumber(getTotalClickPower());
+      document.getElementById("stat-per-second").textContent = formatNumber(getTotalAutoPower());
+      document.getElementById("stat-prestige").textContent = gameState.prestigeLevel;
+      document.getElementById("big-number").textContent = formatNumber(gameState.currency);
+      document.getElementById("click-amount-display").textContent =
+        "+" + formatNumber(getTotalClickPower()) + " per tap";
 
-      curr.textContent = formatNumber(gameState.currency);
-      total.textContent = formatNumber(gameState.totalCurrency);
-      perClick.textContent = formatNumber(getTotalClickPower());
-      perSecond.textContent = formatNumber(getTotalAutoPower());
-      prestige.textContent = gameState.prestigeLevel;
-      big.textContent = formatNumber(gameState.currency);
-      clickDisplay.textContent = "+" + formatNumber(getTotalClickPower()) + " per tap";
-
-      const pPoints = document.getElementById("prestige-points");
-      const pMult = document.getElementById("prestige-mult");
-      pPoints.textContent = formatNumber(gameState.prestigePoints);
-      pMult.textContent = "x" + getPrestigeMultiplier().toFixed(2);
+      document.getElementById("prestige-points").textContent = formatNumber(gameState.prestigePoints);
+      document.getElementById("prestige-mult").textContent = "x" + getPrestigeMultiplier().toFixed(2);
 
       const req = getPrestigeRequirement();
       const reqEl = document.getElementById("prestige-requirement");
       reqEl.textContent =
         "Need at least " +
         formatNumber(req) +
-        " total 67s to prestige. (You have " +
+        " total 67 to prestige. (You have " +
         formatNumber(gameState.totalCurrency) +
         " total.)";
 
@@ -874,35 +914,30 @@
         btnPrestige.classList.add("disabled");
         btnPrestige.textContent = "Ascend 67";
       }
+
+      // Stats UI
+      document.getElementById("stat-total-clicks").textContent = formatNumber(gameState.totalClicks);
+      document.getElementById("stat-total-earned").textContent = formatNumber(gameState.totalCurrency);
+      document.getElementById("stat-highest").textContent = formatNumber(gameState.highest || 0);
+      document.getElementById("stat-upgrades").textContent = Object.values(gameState.upgrades).reduce((a, b) => a + b, 0);
+      document.getElementById("stat-achieve").textContent = Object.keys(gameState.achievementsUnlocked).length;
+      document.getElementById("stat-prestige-level").textContent = gameState.prestigeLevel;
+      document.getElementById("stat-aura").textContent = formatNumber(gameState.prestigePoints);
+      document.getElementById("stat-aura-mult").textContent = "x" + getPrestigeMultiplier().toFixed(2);
+      document.getElementById("stat-click-power").textContent = formatNumber(getTotalClickPower());
+      document.getElementById("stat-auto-power").textContent = formatNumber(getTotalAutoPower());
     }
 
-    /**********************
-     * CORE GAME LOGIC
-     **********************/
-    function getUpgradeCost(u, countOwned) {
-      return Math.floor(u.baseCost * Math.pow(u.costScale, countOwned));
-    }
-
-    function buyUpgrade(upgradeId) {
-      const u = upgradesConfig.find((x) => x.id === upgradeId);
+    function buyUpgrade(id) {
+      const u = upgradesConfig.find((x) => x.id === id);
       if (!u) return;
-
-      const count = gameState.upgrades[upgradeId] || 0;
+      const count = gameState.upgrades[id] || 0;
       const cost = getUpgradeCost(u, count);
-      if (gameState.currency < cost) {
-        addLog("<strong>Not enough 67:</strong> Need " + formatNumber(cost) + ".");
-        return;
-      }
+      if (gameState.currency < cost) return;
 
       gameState.currency -= cost;
-      gameState.upgrades[upgradeId] = count + 1;
-      addLog(
-        "<strong>Upgrade:</strong> Bought " +
-          u.name +
-          " for " +
-          formatNumber(cost) +
-          " 67."
-      );
+      gameState.upgrades[id] = count + 1;
+
       renderUpgrades();
       renderStats();
       checkAchievements();
@@ -913,6 +948,7 @@
       gameState.currency += gain;
       gameState.totalCurrency += gain;
       gameState.totalClicks += 1;
+      gameState.highest = Math.max(gameState.highest || 0, gameState.currency);
 
       const x = event.clientX || (event.touches && event.touches[0].clientX);
       const y = event.clientY || (event.touches && event.touches[0].clientY);
@@ -932,6 +968,7 @@
         const gain = cps * diff;
         gameState.currency += gain;
         gameState.totalCurrency += gain;
+        gameState.highest = Math.max(gameState.highest || 0, gameState.currency);
       }
 
       renderStats();
@@ -945,26 +982,19 @@
         if (a.check(gameState)) {
           gameState.achievementsUnlocked[a.id] = true;
           changed = true;
-          addLog("<strong>Achievement unlocked:</strong> " + a.name);
         }
       });
-      if (changed) {
-        renderAchievements();
-      }
+      if (changed) renderAchievements();
     }
 
     function doPrestige() {
       const gain = calculatePrestigeGain();
-      if (gain <= 0) {
-        addLog("<strong>Prestige blocked:</strong> Not enough total 67s yet.");
-        return;
-      }
-
+      if (gain <= 0) return;
       if (
         !confirm(
           "Ascend 67?\n\nYou will gain " +
             gain +
-            " permanent 67 Aura.\nThis resets 67s, upgrades, and achievements, but not Aura.\n\nContinue?"
+            " permanent 67 Aura.\nThis resets 67, upgrades, and achievements, but keeps Aura.\n\nContinue?"
         )
       ) {
         return;
@@ -972,15 +1002,11 @@
 
       gameState.prestigePoints += gain;
       gameState.prestigeLevel += 1;
-      addLog(
-        "<strong>Prestige:</strong> Ascended with +" +
-          gain +
-          " 67 Aura. All gains are now stronger."
-      );
 
       gameState.currency = 0;
       gameState.totalCurrency = 0;
       gameState.totalClicks = 0;
+      gameState.highest = 0;
       gameState.perClickBase = 1;
       gameState.perSecondBase = 0;
       gameState.upgrades = {};
@@ -993,9 +1019,6 @@
       saveGame();
     }
 
-    /**********************
-     * INIT
-     **********************/
     function init() {
       loadGame();
       renderUpgrades();
@@ -1003,25 +1026,17 @@
       renderStats();
 
       const mainClick = document.getElementById("main-click");
-
       mainClick.addEventListener("click", (e) => {
         e.preventDefault();
         handleClick(e);
       });
-
       mainClick.addEventListener("touchstart", (e) => {
         e.preventDefault();
         handleClick(e.touches[0]);
       });
 
-      document.getElementById("btn-save").addEventListener("click", () => {
-        saveGame();
-      });
-
-      document.getElementById("btn-hard-reset").addEventListener("click", () => {
-        hardReset();
-      });
-
+      document.getElementById("btn-save").addEventListener("click", () => saveGame());
+      document.getElementById("btn-hard-reset").addEventListener("click", () => hardReset());
       document.getElementById("btn-prestige").addEventListener("click", () => {
         if (document.getElementById("btn-prestige").classList.contains("disabled")) return;
         doPrestige();
