@@ -13,15 +13,12 @@
       --accent-strong: #ffcc00;
       --text: #f5f5f5;
       --muted: #aaaaaa;
-      --danger: #ff5555;
       --good: #55ff99;
       --border: #202030;
       --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -89,32 +86,6 @@
       margin: 0;
       font-size: 0.85rem;
       color: var(--muted);
-    }
-
-    .stats-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-      font-size: 0.9rem;
-    }
-
-    .stat-pill {
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: rgba(15, 15, 25, 0.9);
-      border: 1px solid var(--border);
-    }
-
-    .stat-label {
-      color: var(--muted);
-      margin-right: 4px;
-      font-size: 0.8rem;
-    }
-
-    .stat-value {
-      color: var(--accent);
-      font-weight: 600;
     }
 
     .big-number {
@@ -371,43 +342,18 @@
     }
 
     @keyframes pop-up {
-      from {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      to {
-        opacity: 0;
-        transform: translateY(-25px);
-      }
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-25px); }
     }
   </style>
 </head>
 <body>
   <div class="game-wrapper">
-    <!-- LEFT -->
+    <!-- LEFT PANEL -->
     <div class="left-panel panel">
       <div class="header">
         <h1 class="title">67 CLICKER</h1>
         <p class="subtitle">The meme never ends. Only multiplies.</p>
-      </div>
-
-      <div class="stats-bar">
-        <div class="stat-pill">
-          <span class="stat-label">Current:</span>
-          <span id="stat-current" class="stat-value">0</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-label">Per click:</span>
-          <span id="stat-per-click" class="stat-value">1</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-label">Per second:</span>
-          <span id="stat-per-second" class="stat-value">0</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-label">Prestige:</span>
-          <span id="stat-prestige" class="stat-value">0</span>
-        </div>
       </div>
 
       <div class="big-number">
@@ -423,18 +369,19 @@
 
       <div class="tap-hint">Tap / click the 67 ball to farm the meme.</div>
 
-      <!-- Stats UI (replaces console/log) -->
+      <!-- STATS UI UNDER BUTTON -->
       <div class="stats-ui">
-        <div>Total clicks: <span id="stat-total-clicks">0</span></div>
+        <div>Current: <span id="stat-current">0</span></div>
         <div>Total earned: <span id="stat-total-earned">0</span></div>
+        <div>Total clicks: <span id="stat-total-clicks">0</span></div>
         <div>Highest held: <span id="stat-highest">0</span></div>
+        <div>Per click: <span id="stat-per-click">1</span></div>
+        <div>Per second: <span id="stat-per-second">0</span></div>
         <div>Upgrades bought: <span id="stat-upgrades">0</span></div>
         <div>Achievements unlocked: <span id="stat-achieve">0</span></div>
         <div>Prestige level: <span id="stat-prestige-level">0</span></div>
         <div>Aura points: <span id="stat-aura">0</span></div>
         <div>Aura multiplier: <span id="stat-aura-mult">x1.00</span></div>
-        <div>Click power: <span id="stat-click-power">0</span></div>
-        <div>Auto power: <span id="stat-auto-power">0</span></div>
       </div>
 
       <div class="footer-buttons">
@@ -446,7 +393,7 @@
       </div>
     </div>
 
-    <!-- RIGHT -->
+    <!-- RIGHT PANEL -->
     <div class="right-panel">
       <div class="panel">
         <h2 class="section-title">Upgrades</h2>
@@ -461,7 +408,7 @@
       <div class="panel prestige-panel">
         <h2 class="section-title">Prestige</h2>
         <div class="prestige-info">
-          Reset progress for permanent <strong>67 Aura</strong> that multiplies all gain forever.
+          Reset everything for permanent <strong>67 Aura</strong> that multiplies all 67 gain forever.
         </div>
         <div class="prestige-row">
           <div class="prestige-pill">
@@ -484,7 +431,7 @@
   </div>
 
   <script>
-    const SAVE_KEY = "sixtySevenClickerSave_v2";
+    const SAVE_KEY = "sixtySevenClickerSave_v3";
 
     const gameState = {
       currency: 0,
@@ -501,7 +448,7 @@
     };
 
     const upgradesConfig = [
-      // Basic click upgrades
+      // Click upgrades (early)
       {
         id: "click_plus_1",
         name: "Finger of 67",
@@ -530,7 +477,7 @@
         value: 25
       },
 
-      // Basic auto upgrades
+      // Auto upgrades (early)
       {
         id: "auto_1",
         name: "Background 67 Loop",
@@ -559,7 +506,7 @@
         value: 25
       },
 
-      // More click upgrades
+      // More click upgrades (mid/late)
       {
         id: "click_plus_100",
         name: "Quantum 67 Tapper",
@@ -588,7 +535,7 @@
         value: 2500
       },
 
-      // More auto upgrades
+      // More auto upgrades (mid/late)
       {
         id: "auto_50",
         name: "67 Mining Rig",
@@ -782,6 +729,7 @@
       upgradesConfig.forEach((u) => {
         const count = gameState.upgrades[u.id] || 0;
         const cost = getUpgradeCost(u, count);
+
         const card = document.createElement("div");
         card.className = "card";
 
@@ -884,21 +832,31 @@
     }
 
     function renderStats() {
-      document.getElementById("stat-current").textContent = formatNumber(gameState.currency);
-      document.getElementById("stat-total").textContent = formatNumber(gameState.totalCurrency);
-      document.getElementById("stat-per-click").textContent = formatNumber(getTotalClickPower());
-      document.getElementById("stat-per-second").textContent = formatNumber(getTotalAutoPower());
-      document.getElementById("stat-prestige").textContent = gameState.prestigeLevel;
       document.getElementById("big-number").textContent = formatNumber(gameState.currency);
       document.getElementById("click-amount-display").textContent =
         "+" + formatNumber(getTotalClickPower()) + " per tap";
 
+      document.getElementById("stat-current").textContent = formatNumber(gameState.currency);
+      document.getElementById("stat-total-earned").textContent = formatNumber(gameState.totalCurrency);
+      document.getElementById("stat-total-clicks").textContent = formatNumber(gameState.totalClicks);
+      document.getElementById("stat-highest").textContent = formatNumber(gameState.highest || 0);
+      document.getElementById("stat-per-click").textContent = formatNumber(getTotalClickPower());
+      document.getElementById("stat-per-second").textContent = formatNumber(getTotalAutoPower());
+      document.getElementById("stat-upgrades").textContent =
+        Object.values(gameState.upgrades).reduce((a, b) => a + b, 0);
+      document.getElementById("stat-achieve").textContent =
+        Object.keys(gameState.achievementsUnlocked).length;
+      document.getElementById("stat-prestige-level").textContent = gameState.prestigeLevel;
+      document.getElementById("stat-aura").textContent = formatNumber(gameState.prestigePoints);
+      document.getElementById("stat-aura-mult").textContent =
+        "x" + getPrestigeMultiplier().toFixed(2);
+
       document.getElementById("prestige-points").textContent = formatNumber(gameState.prestigePoints);
-      document.getElementById("prestige-mult").textContent = "x" + getPrestigeMultiplier().toFixed(2);
+      document.getElementById("prestige-mult").textContent =
+        "x" + getPrestigeMultiplier().toFixed(2);
 
       const req = getPrestigeRequirement();
-      const reqEl = document.getElementById("prestige-requirement");
-      reqEl.textContent =
+      document.getElementById("prestige-requirement").textContent =
         "Need at least " +
         formatNumber(req) +
         " total 67 to prestige. (You have " +
@@ -914,18 +872,6 @@
         btnPrestige.classList.add("disabled");
         btnPrestige.textContent = "Ascend 67";
       }
-
-      // Stats UI
-      document.getElementById("stat-total-clicks").textContent = formatNumber(gameState.totalClicks);
-      document.getElementById("stat-total-earned").textContent = formatNumber(gameState.totalCurrency);
-      document.getElementById("stat-highest").textContent = formatNumber(gameState.highest || 0);
-      document.getElementById("stat-upgrades").textContent = Object.values(gameState.upgrades).reduce((a, b) => a + b, 0);
-      document.getElementById("stat-achieve").textContent = Object.keys(gameState.achievementsUnlocked).length;
-      document.getElementById("stat-prestige-level").textContent = gameState.prestigeLevel;
-      document.getElementById("stat-aura").textContent = formatNumber(gameState.prestigePoints);
-      document.getElementById("stat-aura-mult").textContent = "x" + getPrestigeMultiplier().toFixed(2);
-      document.getElementById("stat-click-power").textContent = formatNumber(getTotalClickPower());
-      document.getElementById("stat-auto-power").textContent = formatNumber(getTotalAutoPower());
     }
 
     function buyUpgrade(id) {
